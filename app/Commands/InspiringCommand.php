@@ -5,6 +5,7 @@ namespace App\Commands;
 use GuzzleHttp\Client;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
+use NunoMaduro\LaravelConsoleMenu\Menu;
 
 class InspiringCommand extends Command
 {
@@ -41,15 +42,19 @@ class InspiringCommand extends Command
             ])->getBody(), true)
         )->first();
 
-        $option = $this->menu('Meetup Options', [
+        $options = [
             'List Attendance',
             'RSVP',
             'Comment',
-        ])->addStaticItem(
-            'Next meetup is: ' . array_get($meetup, 'local_date') . ' at ' . array_get($meetup, 'local_time')
+        ];
+
+        /** @var Menu $menu */
+        $menu = $this->menu('Meetup Options');
+        $option = $menu->addStaticItem(
+            'Next meetup is: ' . array_get($meetup, 'local_date', '') . ' at ' . array_get($meetup, 'local_time', '')
         )->addStaticItem(
-            'Description: ' . array_get($meetup, 'description')
-        )->open();
+            'Description: ' . strip_tags(array_get($meetup, 'description', ''))
+        )->addOptions($options)->open();
 
         if ($option !== 0) {
             return;

@@ -69,7 +69,7 @@ return [
     |
     */
     'remove' => [
-        // ..
+        // \App\Commands\InspiringCommand::class,
     ],
 
 ];
